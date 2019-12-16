@@ -8,7 +8,6 @@ package com.redhotapp.longtapoverlay
 
 
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
 import android.os.Binder
@@ -19,14 +18,14 @@ import android.view.View
 import android.view.WindowManager
 import android.view.WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
 import android.widget.RelativeLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import com.redhotapp.longtapoverlay.MotionRelay.LEFT_CLICK
 import com.redhotapp.longtapoverlay.MotionRelay.LONG_CLICK
 import com.redhotapp.longtapoverlay.MotionRelay.UPDATE_CURSOR_POSITION
-
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
-import org.jetbrains.anko.longToast
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 
@@ -74,28 +73,45 @@ class LongTapService : Service() {
         super.onCreate()
         circleView = View.inflate(applicationContext, R.layout.layout_long_tap, null) as RelativeLayout
 
-        val displayMetrics = DisplayMetrics()
-        try {
-            windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            windowManager.defaultDisplay?.getMetrics(displayMetrics)
-            with(displayMetrics) {
-                maxX = widthPixels
-                maxY = heightPixels
-            }
+        var builder = NotificationCompat.Builder(this, getString(R.string.channel_id))
+            .setSmallIcon(R.drawable.common_google_signin_btn_icon_dark)
+            .setContentTitle("My notification")
+            .setContentText("Much longer text that cannot fit one line...")
+            .setStyle(NotificationCompat.BigTextStyle()
+                .bigText("Much longer text that cannot fit one line..."))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
 
-            windowManager.addView(circleView, menuLayout)
-            isAdded = true
-        } catch (e: Throwable) {
-            Timber.e(e, e.message)
-            longToast(R.string.overlay_was_denied)
-            isAdded = false
+        builder.build()
+
+        with(NotificationManagerCompat.from(this)) {
+            // notificationId is a unique int for each notification that you must define
+            notify(123, builder.build())
         }
+        val displayMetrics = DisplayMetrics()
+//        try {
+//            Timber.e(this.javaClass.simpleName + "stating")
+//
+//            windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//            windowManager.defaultDisplay?.getMetrics(displayMetrics)
+//            with(displayMetrics) {
+//                maxX = widthPixels
+//                maxY = heightPixels
+//            }
+//
+//            windowManager.addView(circleView, menuLayout)
+//            isAdded = true
+//        } catch (e: Throwable) {
+//            Timber.e(this.javaClass.simpleName, e.message)
+//            longToast(R.string.overlay_was_denied)
+//            isAdded = false
+//        }
 
 //        setWheelView()
 
         Timber.e(this.javaClass.simpleName + "setting wheel")
 
     }
+
 //
 //    private fun setWheelView() {
 //        wheelView = circleView.findViewById<View>(R.id.wheelview) as WheelView
@@ -126,10 +142,10 @@ class LongTapService : Service() {
 
 
     private fun update(event: MotionRelay.CursorMotionEvent) {
-        val tx = (event.x as Int).toPx
-        val ty = (event.y as Int).toPx
-        x += tx
-        y += ty
+//        val tx = (event.x as Int).toPx
+//        val ty = (event.y as Int).toPx
+        x += event.x
+        y += event.y
 
         //SET DISPLAY BORDERS
         if (maxY <= y) {
@@ -196,11 +212,11 @@ class LongTapService : Service() {
     }
 
     private fun onMouseMove(dx: Int, dy: Int) {
-        val tx = dx.toPx
-        val ty = dy.toPx
+//        val tx = dx.toPx
+//        val ty = dy.toPx
 
-        x += tx
-        y += ty
+        x += dx
+        y += dy
 
         //SET DISPLAY BORDERS
         if (maxY <= y) {
