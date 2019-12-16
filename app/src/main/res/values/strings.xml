@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">LongTapOverlay</string>
+    <string name="overlay_was_denied">overlay_was_denied</string>
+</resources>

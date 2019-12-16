@@ -1,0 +1,112 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+    defaultConfig {
+        applicationId "com.redhotapp.longtapoverlay"
+        minSdkVersion 19
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+ext.versions = [
+        'compileSdk'    : 27,
+        'buildTools'    : '27.0.3',
+        'minSdk'        : 21,
+        'targetSdk'     : 27,
+        'versionMajor'  : 1,
+        'versionMinor'  : 2,
+        'versionPatch'  : 47,
+        //versioning see  https://medium.com/@maxirosson/versioning-android-apps-d6ec171cfd82
+        'supportLibrary': '27.1.1',
+        'dagger'        : '2.0.1',
+        'butterKnife'   : '8.8.1',
+        'rx'            : '2.0.1',
+        'moxy'          : '1.5.3',
+        'anko'          : '0.10.4'
+]
+ext.deps = [
+        'support'    : [
+                'appCompat'   : "com.android.support:appcompat-v7:${versions.supportLibrary}",
+                'v4'          : "com.android.support:support-v4:${versions.supportLibrary}",
+                'design'      : "com.android.support:design:${versions.supportLibrary}",
+                'recyclerView': "com.android.support:recyclerview-v7:${versions.supportLibrary}",
+                'cardView'    : "com.android.support:cardview-v7:${versions.supportLibrary}",
+                'leanback'    : "com.android.support:leanback-v17:${versions.supportLibrary}"
+        ],
+        'rx'         : [
+                'core'   : "io.reactivex.rxjava2:rxjava:${versions.rx}",
+                'android': "io.reactivex.rxjava2:rxandroid:${versions.rx}",
+                'relay'  : "com.jakewharton.rxrelay2:rxrelay:2.0.0"
+
+        ],
+        'dagger'     : [
+                'annotation': "org.glassfish:javax.annotation:10.0-b28",
+                'runtime'   : "com.google.dagger:dagger:${versions.dagger}",
+                'compiler'  : "com.google.dagger:dagger-compiler:${versions.dagger}"
+        ],
+        'gson'       : "com.google.code.gson:gson:2.8.2",
+        'butterKnife': [
+                'core'    : "com.jakewharton:butterknife:${versions.butterKnife}",
+                'compiler': "com.jakewharton:butterknife-compiler:${versions.butterKnife}"
+        ],
+        'timber'     : "com.jakewharton.timber:timber:4.5.1",
+        'moxy'       : [
+                'core'     : "com.arello-mobile:moxy:${versions.moxy}",
+                'appCompat': "com.arello-mobile:moxy-app-compat:${versions.moxy}",
+                'compiler' : "com.arello-mobile:moxy-compiler:${versions.moxy}"
+        ],
+        'anko'       : [
+                'commons': "org.jetbrains.anko:anko-commons:${versions.anko}"
+        ],
+]
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+//    mstarImplementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs')
+//    realtek_7_Implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs-realtek')
+//    realtek_9_Implementation fileTree(include: ['*.jar', '*.aar'], dir: 'libs-realtek_9_')
+    implementation deps.support.appCompat
+    implementation deps.support.v4
+    implementation deps.support.design
+    implementation deps.support.recyclerView
+    implementation deps.support.cardView
+    implementation deps.support.leanback
+    implementation deps.rx.core
+    implementation deps.rx.android
+    implementation deps.rx.relay
+    implementation deps.moxy.core
+    implementation deps.moxy.appCompat
+    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    annotationProcessor deps.moxy.compiler
+    implementation deps.dagger.runtime
+    compileOnly deps.dagger.annotation
+    annotationProcessor deps.dagger.compiler
+    implementation deps.gson
+//    implementation deps.butterKnife.core
+//    annotationProcessor deps.butterKnife.compiler
+    implementation deps.timber
+    implementation deps.anko.commons
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+//    implementation project(path: ':mstarime')
+    implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+    implementation 'com.github.zhaokaiqiang.klog:library:1.6.0'
+}
